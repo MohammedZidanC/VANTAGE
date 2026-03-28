@@ -79,18 +79,30 @@ function initAuthForms() {
                 // Map zoom effect triggers as soon as attempt starts
                 if (typeof transitionMap === 'function') transitionMap('dashboard');
 
+                console.log("LOGIN PAYLOAD:", {
+                    user_id: userId,
+                    password: password
+                });
+
                 // Start both API request and minimum 2s loader simultaneously
                 const fetchPromise = fetch(`${API_BASE}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: userId, password }),
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        password: password
+                    })
                 });
                 
                 const loadPromise = showLoading(2000);
                 const [resp] = await Promise.all([fetchPromise, loadPromise]);
 
                 if (!resp.ok) {
-                    console.error("API error:", resp.status);
+                    const text = await resp.text();
+                    console.error("LOGIN ERROR:", resp.status, text);
+                    alert("Invalid credentials");
                     return;
                 }
 
