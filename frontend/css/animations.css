@@ -1,0 +1,138 @@
+/* ═══════════════════════════════════════════════════════════════════
+   VANTAGE — Animations
+   Keyframes, transitions, and motion effects.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Page Fade In ────────────────────────────────────────────────── */
+@keyframes fadeInPage {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Spinner ─────────────────────────────────────────────────────── */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Ripple ──────────────────────────────────────────────────────── */
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ── Slide Down (Task Input) ─────────────────────────────────────── */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Intro Logo Draw ─────────────────────────────────────────────── */
+@keyframes logoDraw {
+    from {
+        stroke-dashoffset: 300;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes logoFadeIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes introTextReveal {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes introGroupShrinkUp {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+    to {
+        transform: translate(0, -40vh) scale(0.35);
+        opacity: 0;
+    }
+}
+
+@keyframes introFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* ── Map Zoom/Pan ────────────────────────────────────────────────── */
+.map-transitioning .leaflet-map-pane {
+    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+/* ── Car Light Glow ──────────────────────────────────────────────── */
+@keyframes carLightPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* ── Subtle Background Shift (for actions) ───────────────────────── */
+@keyframes bgShiftRight {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(8px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes bgShiftLeft {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-8px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes bgZoomIn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+/* ── Info Section Scroll Animations ──────────────────────────────── */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideFromRight {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideFromLeft {
+    from { opacity: 0; transform: translateX(-60px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Gold Shimmer (decorative) ───────────────────────────────────── */
+@keyframes goldShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ── Pulse Glow ──────────────────────────────────────────────────── */
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(230, 185, 95, 0.20); }
+    50% { box-shadow: 0 0 36px rgba(230, 185, 95, 0.40); }
+}
+
+.pulse-glow {
+    animation: pulseGlow 2.5s ease-in-out infinite;
+}

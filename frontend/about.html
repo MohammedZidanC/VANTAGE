@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Mohammed Zidan C — Aspiring Chip Designer, VLSI specialist, and creator of VANTAGE.">
+    <title>About — VANTAGE</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+
+    <!-- Map -->
+    <div id="map-container"><div id="map"></div></div>
+    <div id="map-overlay"></div>
+    <canvas id="car-lights-canvas"></canvas>
+
+    <div id="app">
+
+        <nav class="dock" id="dock">
+            <a href="/dashboard" data-page="dashboard">Dashboard</a>
+            <a href="/info" data-page="info">Info</a>
+            <a href="/about" class="active" data-page="about">About Me</a>
+            <a href="#" data-page="admin" id="admin-dock-link" style="display:none;">Admin</a>
+            <a href="#" id="logout-dock-link" style="display:none;">Logout</a>
+        </nav>
+
+        <main class="page-content">
+            <div class="about-container">
+
+                <!-- Header with profile + portfolio button -->
+                <div class="about-header">
+                    <div class="about-profile">
+                        <img
+                            class="profile-image pulse-glow"
+                            src="https://mohammedzidanc.vercel.app/me.png"
+                            alt="Mohammed Zidan C"
+                        >
+                        <div>
+                            <h1 class="about-name">Mohammed Zidan C</h1>
+                            <p class="about-title-text">Aspiring Chip Designer · VLSI · RTL Design</p>
+                        </div>
+                    </div>
+                    <a href="https://mohammedzidanc.vercel.app/" target="_blank" rel="noopener" class="btn-portfolio">
+                        Portfolio ↗
+                    </a>
+                </div>
+
+                <!-- Bio -->
+                <div class="about-bio glass-card">
+                    <p>
+                        Hi, I'm <strong>Mohammed Zidan C</strong> — an aspiring Chip Designer with a strong focus on VLSI, Digital Logic, and RTL Design. I am deeply interested in building efficient hardware systems and understanding low-level architectural design.
+                    </p>
+                    <p>
+                        Currently an undergraduate specializing in VLSI design and digital systems, I actively explore Verilog HDL, Computer Architecture, and complex logic problem-solving. My approach combines analytical thinking with practical implementation, aiming to develop reliable and optimized digital solutions.
+                    </p>
+                </div>
+
+                <!-- Contact Section -->
+                <div class="contact-section">
+                    <h3>Get In Touch</h3>
+                    <div class="contact-grid">
+
+                        <!-- Call -->
+                        <a href="tel:8590919142" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                            </svg>
+                            Call
+                        </a>
+
+                        <!-- WhatsApp -->
+                        <a href="https://api.whatsapp.com/send/?phone=918590919142&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+                            </svg>
+                            WhatsApp
+                        </a>
+
+                        <!-- Email -->
+                        <a href="mailto:mohammedzidanc@gmail.com" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                <path d="M22 7l-10 7L2 7"/>
+                            </svg>
+                            Email
+                        </a>
+
+                        <!-- GitHub -->
+                        <a href="https://github.com/MohammedZidanC" target="_blank" rel="noopener" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                            </svg>
+                            GitHub
+                        </a>
+
+                        <!-- LinkedIn -->
+                        <a href="https://www.linkedin.com/in/mohammed-zidan-c/" target="_blank" rel="noopener" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/notmohammedzidan" target="_blank" rel="noopener" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                            Instagram
+                        </a>
+
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/" target="_blank" rel="noopener" class="contact-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                            </svg>
+                            Facebook
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/js/map.js"></script>
+    <script src="/js/animations.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

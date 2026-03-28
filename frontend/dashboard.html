@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VANTAGE Dashboard — Manage your tasks with precision and style.">
+    <title>Dashboard — VANTAGE</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/animations.css">
+</head>
+<body>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Map -->
+    <div id="map-container"><div id="map"></div></div>
+    <div id="map-overlay"></div>
+    <canvas id="car-lights-canvas"></canvas>
+
+    <!-- App -->
+    <div id="app">
+
+        <nav class="dock" id="dock">
+            <a href="/dashboard" class="active" data-page="dashboard">Dashboard</a>
+            <a href="/info" data-page="info">Info</a>
+            <a href="/about" data-page="about">About Me</a>
+            <a href="#" data-page="admin" id="admin-dock-link" style="display:none;">Admin</a>
+            <a href="#" id="logout-dock-link" style="display:none;">Logout</a>
+        </nav>
+
+        <main class="page-content" id="dashboard-page">
+            <div class="dashboard-container">
+
+                <div class="dashboard-header">
+                    <h1>Dashboard</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn-icon" id="btn-refresh" title="Refresh tasks">↻</button>
+                        <button class="btn-icon" id="btn-add-task" title="Add task">+</button>
+                    </div>
+                </div>
+
+                <!-- Task Input -->
+                <div class="task-input-area" id="task-input-area">
+                    <input type="text" id="task-input" placeholder="What needs to be done?" maxlength="200">
+                    <button id="task-submit">Add</button>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="glass-card" style="padding: 8px 0;">
+                    <ul class="tasks-list" id="tasks-list"></ul>
+                    <div class="tasks-empty" id="tasks-empty" style="display:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <p>No tasks yet. Click <strong>+</strong> to add one.</p>
+                    </div>
+                </div>
+
+                <!-- Admin Panel (hidden by default) -->
+                <div id="admin-panel" style="display:none; margin-top: 48px;">
+                    <div class="admin-container">
+                        <h1>Admin Panel</h1>
+                        <div class="glass-card" style="padding: 4px 0; overflow-x: auto;">
+                            <table class="users-table" id="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>User ID</th>
+                                        <th>Email</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- User Tasks Modal -->
+    <div class="modal-overlay" id="tasks-modal">
+        <div class="modal-content glass-card" style="position:relative;">
+            <button class="close-modal" id="close-modal">&times;</button>
+            <h3 id="modal-title">User Tasks</h3>
+            <div id="modal-tasks-list"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/js/map.js"></script>
+    <script src="/js/animations.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/tasks.js"></script>
+    <script src="/js/admin.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

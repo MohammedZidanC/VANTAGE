@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="#E6B95F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Abstract checkmark loop -->
+  <path d="M16 34 L26 44 L48 20" stroke-dasharray="300" stroke-dashoffset="0"/>
+  <path d="M48 20 C52 16 56 20 52 28 C48 36 36 48 26 44 C16 40 12 30 16 22 C20 14 32 12 40 18" stroke-dasharray="300" stroke-dashoffset="0"/>
+</svg>
