@@ -3,7 +3,7 @@
    User management for the hardcoded admin (mz8834).
    ═══════════════════════════════════════════════════════════════════ */
 
-const ADMIN_API = 'http://127.0.0.1:8000/api/admin';
+const ADMIN_API = 'https://mohammedzidanc.pythonanywhere.com/api/admin';
 
 function initAdminPanel() {
     if (!isAdmin()) return;
@@ -31,7 +31,7 @@ async function loadUsers() {
     if (!tbody) return;
 
     try {
-        const resp = await fetch(`${ADMIN_API}/users?admin_id=${encodeURIComponent(adminId)}`);
+        const resp = await fetch(`${ADMIN_API}/users?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) throw new Error('Failed to load users');
         const users = await resp.json();
 
@@ -76,7 +76,7 @@ async function viewUserTasks(userId) {
     modal.classList.add('visible');
 
     try {
-        const resp = await fetch(`${ADMIN_API}/users/${encodeURIComponent(userId)}/tasks?admin_id=${encodeURIComponent(adminId)}`);
+        const resp = await fetch(`${ADMIN_API}/users/${encodeURIComponent(userId)}/tasks?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) throw new Error('Failed');
         const tasks = await resp.json();
 
@@ -105,6 +105,7 @@ async function deleteUser(userId) {
     try {
         const resp = await fetch(`${ADMIN_API}/users/${encodeURIComponent(userId)}?admin_id=${encodeURIComponent(adminId)}`, {
             method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
         });
         if (!resp.ok) throw new Error('Delete failed');
         loadUsers();

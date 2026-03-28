@@ -3,7 +3,7 @@
    Login and register fetch calls, session management.
    ═══════════════════════════════════════════════════════════════════ */
 
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://mohammedzidanc.pythonanywhere.com/api';
 
 // ── Session Helpers ──────────────────────────────────────────────────
 function getSession() {

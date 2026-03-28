@@ -3,7 +3,7 @@
    CRUD operations for dashboard tasks with animations.
    ═══════════════════════════════════════════════════════════════════ */
 
-const TASKS_API = 'http://127.0.0.1:8000/api/tasks';
+const TASKS_API = 'https://mohammedzidanc.pythonanywhere.com/api/tasks';
 
 // ── Load Tasks ───────────────────────────────────────────────────────
 async function loadTasks() {
@@ -15,7 +15,7 @@ async function loadTasks() {
     if (!list) return;
 
     try {
-        const resp = await fetch(`${TASKS_API}?user_id=${encodeURIComponent(userId)}`);
+        const resp = await fetch(`${TASKS_API}?user_id=${encodeURIComponent(userId)}`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) throw new Error('Failed to load tasks');
         const tasks = await resp.json();
 
@@ -95,7 +95,7 @@ async function handleTaskComplete(li, taskId) {
         li.classList.add('completing');
         setTimeout(async () => {
             try {
-                await fetch(`${TASKS_API}/${taskId}`, { method: 'DELETE' });
+                await fetch(`${TASKS_API}/${taskId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
             } catch (e) { /* silent */ }
             li.remove();
             // Check if list is now empty
