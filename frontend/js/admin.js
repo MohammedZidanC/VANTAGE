@@ -32,7 +32,10 @@ async function loadUsers() {
 
     try {
         const resp = await fetch(`${API_BASE}/admin/users?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
-        if (!resp.ok) throw new Error('Failed to load users');
+        if (!resp.ok) {
+            console.error("API error:", resp.status);
+            return;
+        }
         const users = await resp.json();
 
         tbody.innerHTML = '';
@@ -76,9 +79,15 @@ async function viewUserTasks(userId) {
     modal.classList.add('visible');
 
     try {
-        const resp = await fetch(`${API_BASE}/admin/users/${encodeURIComponent(userId)}/tasks?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
-        if (!resp.ok) throw new Error('Failed');
-        const tasks = await resp.json();
+        const resp = await fetch(`${API_BASE}/admin/tasks?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
+        if (!resp.ok) {
+            console.error("API error:", resp.status);
+            return;
+        }
+        let tasks = await resp.json();
+        
+        // Filter locally since we are using the global tasks route
+        tasks = tasks.filter(t => t.owner_id === userId);
 
         if (tasks.length === 0) {
             listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">No tasks found.</p>';
@@ -107,7 +116,10 @@ async function deleteUser(userId) {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         });
-        if (!resp.ok) throw new Error('Delete failed');
+        if (!resp.ok) {
+            console.error("API error:", resp.status);
+            return;
+        }
         loadUsers();
     } catch (err) {
         console.error('Admin: Error deleting user:', err);

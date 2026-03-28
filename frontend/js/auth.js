@@ -11,15 +11,8 @@ function getSession() {
     return data ? JSON.parse(data) : null;
 }
 
-function setSession(user) {
-    localStorage.setItem('vantage_session', JSON.stringify(user));
-    if (user && user.user_id) localStorage.setItem('user_id', user.user_id);
-    
-    if (user && user.user_id === "mz8834") {
-        localStorage.setItem("is_admin", "true");
-    } else {
-        localStorage.removeItem("is_admin");
-    }
+function setSession(data) {
+    localStorage.setItem('vantage_session', JSON.stringify(data.user || data));
 }
 
 function clearSession() {
@@ -96,12 +89,17 @@ function initAuthForms() {
                 const loadPromise = showLoading(2000);
                 const [resp] = await Promise.all([fetchPromise, loadPromise]);
 
-                const data = await resp.json();
-                if (data.error) {
-                    throw new Error(data.error);
+                if (!resp.ok) {
+                    console.error("API error:", resp.status);
+                    return;
                 }
 
-                setSession(data.user);
+                const data = await resp.json();
+                
+                localStorage.setItem("user_id", data.user_id);
+                localStorage.setItem("is_admin", data.is_admin);
+                setSession(data);
+                
                 window.location.href = dest;
             } catch (err) {
                 errorEl.textContent = err.message;
@@ -137,10 +135,12 @@ function initAuthForms() {
                 const loadPromise = showLoading(2000);
                 const [resp] = await Promise.all([fetchPromise, loadPromise]);
 
-                const data = await resp.json();
-                if (data.error) {
-                    throw new Error(data.error);
+                if (!resp.ok) {
+                    console.error("API error:", resp.status);
+                    return;
                 }
+
+                const data = await resp.json();
 
                 // Auto-login after register
                 const loginResp = await fetch(`${API_BASE}/login`, {

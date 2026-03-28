@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Admin link -> scroll to admin panel on dashboard
         adminLink.addEventListener('click', (e) => {
             e.preventDefault();
+
+            if (localStorage.getItem("is_admin") !== "true") {
+                alert("Admin access only");
+                return;
+            }
             if (window.location.pathname === '/dashboard') {
                 const panel = document.getElementById('admin-panel');
                 if (panel) {
@@ -75,6 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (typeof isLoggedIn === 'function' && !isLoggedIn()) {
                     alert("Please login to access this page");
                     return; // Block navigation
+                }
+            }
+
+            if (page === 'admin') {
+                if (localStorage.getItem("is_admin") !== "true") {
+                    alert("Admin access only");
+                    return;
                 }
             }
 

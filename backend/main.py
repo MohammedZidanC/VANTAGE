@@ -47,11 +47,11 @@ def create_task():
         
     data = request.get_json()
     if not data or not data.get("title"):
-        return jsonify({"error": "Invalid JSON or missing title"}), 400
+        return jsonify({"error": "Invalid data"}), 400
         
     db = SessionLocal()
     try:
-        new_task = Task(title=data.get("title"), owner_id=user_id)
+        new_task = Task(title=data["title"], owner_id=user_id)
         db.add(new_task)
         db.commit()
         db.refresh(new_task)

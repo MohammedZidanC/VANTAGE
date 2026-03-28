@@ -15,8 +15,11 @@ async function loadTasks() {
     if (!list) return;
 
     try {
-        const resp = await fetch(`${API_BASE}/tasks?user_id=${encodeURIComponent(userId)}`, { headers: { 'Content-Type': 'application/json' } });
-        if (!resp.ok) throw new Error('Failed to load tasks');
+        const resp = await fetch(`${API_BASE}/tasks?user_id=${userId}`, { headers: { 'Content-Type': 'application/json' } });
+        if (!resp.ok) {
+            console.error("API error:", resp.status);
+            return;
+        }
         const tasks = await resp.json();
 
         list.innerHTML = '';
@@ -84,11 +87,15 @@ async function handleTaskComplete(li, taskId) {
 
     // API call
     try {
-        await fetch(`${API_BASE}/tasks/${taskId}?user_id=${encodeURIComponent(userId)}`, {
+        const resp = await fetch(`${API_BASE}/tasks/${taskId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ completed: true }),
         });
+        if (!resp.ok) {
+            console.error("API error:", resp.status);
+            return;
+        }
     } catch (err) {
         console.error('Error completing task:', err);
     }
@@ -98,7 +105,11 @@ async function handleTaskComplete(li, taskId) {
         li.classList.add('completing');
         setTimeout(async () => {
             try {
-                await fetch(`${API_BASE}/tasks/${taskId}?user_id=${encodeURIComponent(userId)}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+                const resp = await fetch(`${API_BASE}/tasks/${taskId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+                if (!resp.ok) {
+                    console.error("API error:", resp.status);
+                    return;
+                }
             } catch (e) { /* silent */ }
             li.remove();
             // Check if list is now empty
@@ -117,13 +128,16 @@ async function addTask(title) {
     if (!userId || !title.trim()) return;
 
     try {
-        const resp = await fetch(`${API_BASE}/tasks?user_id=${encodeURIComponent(userId)}`, {
+        const resp = await fetch(`${API_BASE}/tasks?user_id=${userId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title: title.trim() }),
         });
 
-        if (!resp.ok) throw new Error('Failed to add task');
+        if (!resp.ok) {
+            console.error("API error:", resp.status);
+            return;
+        }
 
         // Immediately reload all tasks
         await loadTasks();

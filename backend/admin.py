@@ -47,6 +47,19 @@ def get_user_tasks(user_id):
         db.close()
 
 
+@admin_bp.route("/tasks", methods=["GET"])
+def get_all_tasks():
+    if not verify_admin():
+        return jsonify({"error": "Admin access required."}), 403
+        
+    db = SessionLocal()
+    try:
+        tasks = db.query(Task).all()
+        return jsonify([t.to_dict() for t in tasks])
+    finally:
+        db.close()
+
+
 @admin_bp.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     """Delete a user and all their tasks."""

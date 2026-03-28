@@ -55,17 +55,30 @@ def login():
         if not user or not pwd_context.verify(data.get("password"), user.hashed_password):
             return jsonify({"error": "Invalid credentials."}), 401
 
-        is_admin = data.get("user_id") == "mz8834"
+        if user.user_id == "mz8834":
+            return jsonify({
+                "success": True,
+                "user_id": user.user_id,
+                "is_admin": True,
+                "user": {
+                    "id": user.id,
+                    "full_name": user.full_name,
+                    "user_id": user.user_id,
+                    "email": user.email,
+                    "is_admin": True,
+                }
+            }), 200
 
         return jsonify({
             "success": True,
             "user_id": user.user_id,
+            "is_admin": False,
             "user": {
                 "id": user.id,
                 "full_name": user.full_name,
                 "user_id": user.user_id,
                 "email": user.email,
-                "is_admin": is_admin,
+                "is_admin": False,
             },
         }), 200
     finally:
