@@ -8,7 +8,7 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 from .database import init_db, SessionLocal
-from .models import Task
+from .models import Task, User
 from .auth import auth_bp
 from .admin import admin_bp
 
@@ -51,9 +51,19 @@ def create_task():
         
     db = SessionLocal()
     try:
+        # Check if user exists
+        user = db.query(User).filter(User.user_id == user_id).first()
+        if not user:
+            return jsonify({"error": "User does not exist"}), 400
+
         new_task = Task(title=data["title"], owner_id=user_id)
         db.add(new_task)
-        db.commit()
+        try:
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            print("DB ERROR:", e)
+            return jsonify({"error": "Database error"}), 500
         db.refresh(new_task)
         return jsonify(new_task.to_dict()), 201
     finally:

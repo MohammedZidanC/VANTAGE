@@ -27,10 +27,10 @@ class User(Base):
     def to_dict(self):
         return {
             "id": self.id,
-            "full_name": self.full_name,
-            "user_id": self.user_id,
-            "email": self.email,
-            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None
+            "title": self.title,
+            "completed": self.completed,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
+            "owner_id": self.owner_id
         }
 
 

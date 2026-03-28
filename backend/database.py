@@ -5,7 +5,7 @@ SQLAlchemy engine and session management for SQLite.
 
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database file lives at <project_root>/database/app.db
