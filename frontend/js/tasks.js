@@ -58,6 +58,9 @@ function createTaskElement(task) {
 
 // ── Handle Task Completion ───────────────────────────────────────────
 async function handleTaskComplete(li, taskId) {
+    const userId = getCurrentUserId();
+    if (!userId) return;
+
     const checkbox = li.querySelector('.task-checkbox');
     const title = li.querySelector('.task-title');
 
@@ -81,7 +84,7 @@ async function handleTaskComplete(li, taskId) {
 
     // API call
     try {
-        await fetch(`${API_BASE}/tasks/${taskId}`, {
+        await fetch(`${API_BASE}/tasks/${taskId}?user_id=${encodeURIComponent(userId)}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ completed: true }),
@@ -95,7 +98,7 @@ async function handleTaskComplete(li, taskId) {
         li.classList.add('completing');
         setTimeout(async () => {
             try {
-                await fetch(`${API_BASE}/tasks/${taskId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+                await fetch(`${API_BASE}/tasks/${taskId}?user_id=${encodeURIComponent(userId)}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
             } catch (e) { /* silent */ }
             li.remove();
             // Check if list is now empty

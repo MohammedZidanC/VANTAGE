@@ -78,11 +78,11 @@ function initAuthForms() {
                     body: JSON.stringify({ user_id: userId, password }),
                 });
 
-                if (!resp.ok) {
-                    throw new Error('Login failed.');
+                const data = await resp.json();
+                if (data.error) {
+                    throw new Error(data.error);
                 }
 
-                const data = await resp.json();
                 setSession(data.user);
 
                 // Map zoom effect
@@ -90,7 +90,12 @@ function initAuthForms() {
 
                 // Show loading spinner for 2 seconds, then navigate
                 await showLoading(2000);
-                window.location.href = '/dashboard.html';
+                
+                if (data.user.is_admin === true) {
+                    window.location.href = '/dashboard.html#admin';
+                } else {
+                    window.location.href = '/dashboard.html';
+                }
             } catch (err) {
                 errorEl.textContent = err.message;
                 errorEl.style.display = 'block';
@@ -122,8 +127,9 @@ function initAuthForms() {
                     }),
                 });
 
-                if (!resp.ok) {
-                    throw new Error('Registration failed.');
+                const data = await resp.json();
+                if (data.error) {
+                    throw new Error(data.error);
                 }
 
                 // Auto-login after register

@@ -118,7 +118,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Wait ~250ms AFTER map movement starts (150ms map delay + 250ms = 400ms)
             setTimeout(() => {
-                window.location.href = href;
+                let dst = href;
+                if (dst === '/info') dst = '/info.html';
+                if (dst === '/about') dst = '/about.html';
+                if (dst === '/dashboard') dst = '/dashboard.html';
+                window.location.href = dst;
             }, 400);
 
         });
