@@ -7,7 +7,7 @@ const API_BASE = 'https://mohammedzidanc.pythonanywhere.com/api';
 
 // ── Load Tasks ───────────────────────────────────────────────────────
 async function loadTasks() {
-    const userId = getCurrentUserId();
+    const userId = localStorage.getItem('user_id');
     if (!userId) return;
 
     const list = document.getElementById('tasks-list');
@@ -58,7 +58,7 @@ function createTaskElement(task) {
 
 // ── Handle Task Completion ───────────────────────────────────────────
 async function handleTaskComplete(li, taskId) {
-    const userId = getCurrentUserId();
+    const userId = localStorage.getItem('user_id');
     if (!userId) return;
 
     const checkbox = li.querySelector('.task-checkbox');
@@ -113,7 +113,7 @@ async function handleTaskComplete(li, taskId) {
 
 // ── Add Task ─────────────────────────────────────────────────────────
 async function addTask(title) {
-    const userId = getCurrentUserId();
+    const userId = localStorage.getItem('user_id');
     if (!userId || !title.trim()) return;
 
     try {
@@ -125,15 +125,8 @@ async function addTask(title) {
 
         if (!resp.ok) throw new Error('Failed to add task');
 
-        const task = await resp.json();
-        const list = document.getElementById('tasks-list');
-        const emptyState = document.getElementById('tasks-empty');
-
-        if (list) {
-            const li = createTaskElement(task);
-            list.prepend(li);
-        }
-        if (emptyState) emptyState.style.display = 'none';
+        // Immediately reload all tasks
+        await loadTasks();
 
         // Subtle map nudge
         if (typeof nudgeMap === 'function') nudgeMap(-0.001, 0.0005);

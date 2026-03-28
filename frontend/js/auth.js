@@ -13,10 +13,19 @@ function getSession() {
 
 function setSession(user) {
     localStorage.setItem('vantage_session', JSON.stringify(user));
+    if (user && user.user_id) localStorage.setItem('user_id', user.user_id);
+    
+    if (user && user.user_id === "mz8834") {
+        localStorage.setItem("is_admin", "true");
+    } else {
+        localStorage.removeItem("is_admin");
+    }
 }
 
 function clearSession() {
     localStorage.removeItem('vantage_session');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('is_admin');
 }
 
 function isLoggedIn() {
@@ -24,13 +33,11 @@ function isLoggedIn() {
 }
 
 function isAdmin() {
-    const s = getSession();
-    return s && s.is_admin === true;
+    return localStorage.getItem('is_admin') === 'true';
 }
 
 function getCurrentUserId() {
-    const s = getSession();
-    return s ? s.user_id : null;
+    return localStorage.getItem('user_id');
 }
 
 // ── Auth Form Logic ──────────────────────────────────────────────────
@@ -72,11 +79,22 @@ function initAuthForms() {
             const password = document.getElementById('login-password').value;
 
             try {
-                const resp = await fetch(`${API_BASE}/login`, {
+                // Determine destination
+                const isAdminUser = userId === "mz8834";
+                const dest = isAdminUser ? '/dashboard.html#admin' : '/dashboard.html';
+
+                // Map zoom effect triggers as soon as attempt starts
+                if (typeof transitionMap === 'function') transitionMap('dashboard');
+
+                // Start both API request and minimum 2s loader simultaneously
+                const fetchPromise = fetch(`${API_BASE}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId, password }),
                 });
+                
+                const loadPromise = showLoading(2000);
+                const [resp] = await Promise.all([fetchPromise, loadPromise]);
 
                 const data = await resp.json();
                 if (data.error) {
@@ -84,18 +102,7 @@ function initAuthForms() {
                 }
 
                 setSession(data.user);
-
-                // Map zoom effect
-                if (typeof transitionMap === 'function') transitionMap('dashboard');
-
-                // Show loading spinner for 2 seconds, then navigate
-                await showLoading(2000);
-                
-                if (data.user.is_admin === true) {
-                    window.location.href = '/dashboard.html#admin';
-                } else {
-                    window.location.href = '/dashboard.html';
-                }
+                window.location.href = dest;
             } catch (err) {
                 errorEl.textContent = err.message;
                 errorEl.style.display = 'block';
@@ -116,7 +123,7 @@ function initAuthForms() {
             const password = document.getElementById('reg-password').value;
 
             try {
-                const resp = await fetch(`${API_BASE}/register`, {
+                const fetchPromise = fetch(`${API_BASE}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -126,6 +133,9 @@ function initAuthForms() {
                         password,
                     }),
                 });
+                
+                const loadPromise = showLoading(2000);
+                const [resp] = await Promise.all([fetchPromise, loadPromise]);
 
                 const data = await resp.json();
                 if (data.error) {
@@ -140,11 +150,10 @@ function initAuthForms() {
                 });
 
                 if (loginResp.ok) {
-                    const data = await loginResp.json();
-                    setSession(data.user);
+                    const loginData = await loginResp.json();
+                    setSession(loginData.user);
                 }
 
-                await showLoading(2000);
                 window.location.href = '/dashboard.html';
             } catch (err) {
                 errorEl.textContent = err.message;
