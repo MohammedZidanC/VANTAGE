@@ -90,7 +90,7 @@ function initAuthForms() {
 
                 // Show loading spinner for 2 seconds, then navigate
                 await showLoading(2000);
-                window.location.href = '/dashboard';
+                window.location.href = '/dashboard.html';
             } catch (err) {
                 errorEl.textContent = err.message;
                 errorEl.style.display = 'block';
@@ -139,7 +139,7 @@ function initAuthForms() {
                 }
 
                 await showLoading(2000);
-                window.location.href = '/dashboard';
+                window.location.href = '/dashboard.html';
             } catch (err) {
                 errorEl.textContent = err.message;
                 errorEl.style.display = 'block';
@@ -156,11 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // If logged in and on home page, redirect to dashboard
     if (isLoggedIn() && (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
-        window.location.href = '/dashboard';
+        window.location.href = '/dashboard.html';
     }
 
     // If not logged in and on dashboard, graceful redirect
-    if (!isLoggedIn() && window.location.pathname === '/dashboard') {
+    if (!isLoggedIn() && window.location.pathname.includes('dashboard')) {
         console.log('[VANTAGE] Not logged in on dashboard, redirecting...');
         const app = document.getElementById('app');
         if (app) {
