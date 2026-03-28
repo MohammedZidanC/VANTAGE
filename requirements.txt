@@ -1,6 +1,5 @@
-fastapi
-uvicorn[standard]
-passlib[bcrypt]
-python-multipart
+flask
+flask-cors
 sqlalchemy
+passlib[bcrypt]
 bcrypt==4.0.1
