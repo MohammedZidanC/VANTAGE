@@ -3,7 +3,7 @@
    CRUD operations for dashboard tasks with animations.
    ═══════════════════════════════════════════════════════════════════ */
 
-const TASKS_API = 'https://mohammedzidanc.pythonanywhere.com/api/tasks';
+const API_BASE = 'https://mohammedzidanc.pythonanywhere.com/api';
 
 // ── Load Tasks ───────────────────────────────────────────────────────
 async function loadTasks() {
@@ -15,7 +15,7 @@ async function loadTasks() {
     if (!list) return;
 
     try {
-        const resp = await fetch(`${TASKS_API}?user_id=${encodeURIComponent(userId)}`, { headers: { 'Content-Type': 'application/json' } });
+        const resp = await fetch(`${API_BASE}/tasks?user_id=${encodeURIComponent(userId)}`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) throw new Error('Failed to load tasks');
         const tasks = await resp.json();
 
@@ -81,7 +81,7 @@ async function handleTaskComplete(li, taskId) {
 
     // API call
     try {
-        await fetch(`${TASKS_API}/${taskId}`, {
+        await fetch(`${API_BASE}/tasks/${taskId}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ completed: true }),
@@ -95,7 +95,7 @@ async function handleTaskComplete(li, taskId) {
         li.classList.add('completing');
         setTimeout(async () => {
             try {
-                await fetch(`${TASKS_API}/${taskId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
+                await fetch(`${API_BASE}/tasks/${taskId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } });
             } catch (e) { /* silent */ }
             li.remove();
             // Check if list is now empty
@@ -114,7 +114,7 @@ async function addTask(title) {
     if (!userId || !title.trim()) return;
 
     try {
-        const resp = await fetch(`${TASKS_API}?user_id=${encodeURIComponent(userId)}`, {
+        const resp = await fetch(`${API_BASE}/tasks?user_id=${encodeURIComponent(userId)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title: title.trim() }),

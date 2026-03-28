@@ -65,10 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.dock a[data-page]').forEach(link => {
         if (link.id === 'admin-dock-link') return; // handled above
 
-        link.addEventListener('click', async (e) => {
+        link.addEventListener('click', (e) => {
             e.preventDefault();
             const page = link.dataset.page;
             const href = link.getAttribute('href');
+
+            // ── LOGIN PROTECTION ──
+            if (['dashboard', 'info', 'admin'].includes(page)) {
+                if (typeof isLoggedIn === 'function' && !isLoggedIn()) {
+                    alert("Please login to access this page");
+                    return; // Block navigation
+                }
+            }
 
             // Don't reload if already on the page or transitioning
             if (link.classList.contains('active') || isTransitioning) return;
@@ -108,54 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
             void overlay.offsetWidth; // force reflow
             overlay.style.opacity = '1';
 
-            try {
-                // Fetch new page content in background
-                const resp = await fetch(href);
-                const html = await resp.text();
-
-                // Wait ~250ms AFTER map movement starts (150ms map delay + 250ms = 400ms)
-                setTimeout(() => {
-                    const parser = new DOMParser();
-                    const newDoc = parser.parseFromString(html, 'text/html');
-                    const newContent = newDoc.querySelector('.page-content');
-
-                    if (newContent && content) {
-                        // DOM switch
-                        content.innerHTML = newContent.innerHTML;
-                        
-                        // Set initial entry state
-                        content.style.transition = 'none';
-                        content.style.opacity = '0';
-                        content.style.transform = 'translateY(10px)';
-
-                        // Delay slightly to let browser register new layout before animating in
-                        requestAnimationFrame(() => {
-                            // Fade in new content smoothly
-                            content.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
-                            content.style.opacity = '1';
-                            content.style.transform = 'translateY(0)';
-                            
-                            overlay.style.opacity = '0';
-                            
-                            window.history.pushState({}, '', href);
-
-                            // Re-initialize specific scripts if needed
-                            if (page === 'dashboard' && typeof initDashboard === 'function') {
-                                initDashboard();
-                                if (typeof initAdminPanel === 'function') initAdminPanel();
-                            }
-                            
-                            setTimeout(() => { isTransitioning = false; }, 300);
-                        });
-                    } else {
-                        window.location.href = href;
-                    }
-                }, 400);
-
-            } catch (err) {
-                console.error("Transition failed:", err);
+            // Wait ~250ms AFTER map movement starts (150ms map delay + 250ms = 400ms)
+            setTimeout(() => {
                 window.location.href = href;
-            }
+            }, 400);
+
         });
     });
 
