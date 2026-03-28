@@ -128,11 +128,18 @@ async function addTask(title) {
     if (!userId || !title.trim()) return;
 
     try {
+        console.log("TASK CREATE:", {
+            user_id: userId,
+            title: title.trim()
+        });
+
         const resp = await fetch(`${API_BASE}/tasks?user_id=${userId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title: title.trim() }),
         });
+
+        console.log("TASK RESPONSE:", resp.status);
 
         if (!resp.ok) {
             console.error("API error:", resp.status);
