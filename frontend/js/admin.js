@@ -31,10 +31,11 @@ async function loadUsers() {
     if (!tbody) return;
 
     try {
-        const resp = await fetch(`${API_BASE}/admin/users?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
+        const resp = await fetch(`${API_BASE}/admin/users`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) {
-            console.error("API error:", resp.status);
-            return;
+            const text = await resp.text();
+            console.error("API ERROR:", resp.status, text);
+            throw new Error("Request failed");
         }
         const users = await resp.json();
 
@@ -79,15 +80,13 @@ async function viewUserTasks(userId) {
     modal.classList.add('visible');
 
     try {
-        const resp = await fetch(`${API_BASE}/admin/tasks?admin_id=${encodeURIComponent(adminId)}`, { headers: { 'Content-Type': 'application/json' } });
+        const resp = await fetch(`${API_BASE}/admin/tasks`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) {
-            console.error("API error:", resp.status);
-            return;
+            const text = await resp.text();
+            console.error("API ERROR:", resp.status, text);
+            throw new Error("Request failed");
         }
         let tasks = await resp.json();
-        
-        // Filter locally since we are using the global tasks route
-        tasks = tasks.filter(t => t.owner_id === userId);
 
         if (tasks.length === 0) {
             listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">No tasks found.</p>';
@@ -112,13 +111,14 @@ async function deleteUser(userId) {
 
     const adminId = getCurrentUserId();
     try {
-        const resp = await fetch(`${API_BASE}/admin/users/${encodeURIComponent(userId)}?admin_id=${encodeURIComponent(adminId)}`, {
+        const resp = await fetch(`${API_BASE}/admin/users/${userId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         });
         if (!resp.ok) {
-            console.error("API error:", resp.status);
-            return;
+            const text = await resp.text();
+            console.error("API ERROR:", resp.status, text);
+            throw new Error("Request failed");
         }
         loadUsers();
     } catch (err) {
