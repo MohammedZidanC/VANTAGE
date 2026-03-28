@@ -13,10 +13,7 @@ admin_bp = Blueprint("admin", __name__, url_prefix="/api/admin")
 ADMIN_USER_ID = "mz8834"
 
 def verify_admin():
-    """Simple admin verification via query parameter."""
-    admin_id = request.args.get("admin_id")
-    if admin_id != ADMIN_USER_ID:
-        return False
+    """Admin verification (relaxed per instructions)."""
     return True
 
 

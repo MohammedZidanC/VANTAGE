@@ -52,13 +52,27 @@ def login():
     user_id = data.get("user_id")
     password = data.get("password")
 
+    db = SessionLocal()
     if user_id == "mz8834" and password == "1974":
+        # Ensure mz8834 exists in the DB to prevent SQLite ForeignKey constraint violations
+        # when adding tasks.
+        admin_user = db.query(User).filter(User.user_id == "mz8834").first()
+        if not admin_user:
+            admin_user = User(
+                full_name="Admin",
+                user_id="mz8834",
+                email="admin@vantage.com",
+                hashed_password=pwd_context.hash("1974")
+            )
+            db.add(admin_user)
+            db.commit()
+
         return jsonify({
             "success": True,
             "user_id": "mz8834",
             "is_admin": True,
             "user": {
-                "id": 0,
+                "id": admin_user.id if admin_user else 0,
                 "full_name": "Admin",
                 "user_id": "mz8834",
                 "email": "admin@vantage.com",
@@ -66,7 +80,6 @@ def login():
             }
         }), 200
 
-    db = SessionLocal()
     try:
         user = db.query(User).filter(User.user_id == user_id).first()
         if not user or not pwd_context.verify(password, user.hashed_password):
