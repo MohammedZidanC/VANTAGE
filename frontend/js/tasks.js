@@ -123,9 +123,15 @@ async function handleTaskComplete(li, taskId) {
 }
 
 // ── Add Task ─────────────────────────────────────────────────────────
+console.log("USER ID:", userId);
 async function addTask(title) {
     const userId = localStorage.getItem('user_id');
-    if (!userId || !title.trim()) return;
+    if (!userId) {
+    alert("User not logged in");
+    return;
+}
+
+if (!title.trim()) return;
 
     try {
         console.log("TASK CREATE:", {
