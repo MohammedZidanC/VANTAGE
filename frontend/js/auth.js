@@ -3,7 +3,7 @@
    Login and register fetch calls, session management.
    ═══════════════════════════════════════════════════════════════════ */
 
-const API_BASE = window.location.origin;
+const API_BASE = 'http://127.0.0.1:8000/api';
 
 // ── Session Helpers ──────────────────────────────────────────────────
 function getSession() {
@@ -72,15 +72,14 @@ function initAuthForms() {
             const password = document.getElementById('login-password').value;
 
             try {
-                const resp = await fetch(`${API_BASE}/api/auth/login`, {
+                const resp = await fetch(`${API_BASE}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId, password }),
                 });
 
                 if (!resp.ok) {
-                    const err = await resp.json();
-                    throw new Error(err.detail || 'Login failed.');
+                    throw new Error('Login failed.');
                 }
 
                 const data = await resp.json();
@@ -112,7 +111,7 @@ function initAuthForms() {
             const password = document.getElementById('reg-password').value;
 
             try {
-                const resp = await fetch(`${API_BASE}/api/auth/register`, {
+                const resp = await fetch(`${API_BASE}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -124,12 +123,11 @@ function initAuthForms() {
                 });
 
                 if (!resp.ok) {
-                    const err = await resp.json();
-                    throw new Error(err.detail || 'Registration failed.');
+                    throw new Error('Registration failed.');
                 }
 
                 // Auto-login after register
-                const loginResp = await fetch(`${API_BASE}/api/auth/login`, {
+                const loginResp = await fetch(`${API_BASE}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: userId, password }),
@@ -154,13 +152,24 @@ function initAuthForms() {
 document.addEventListener('DOMContentLoaded', () => {
     initAuthForms();
 
+    console.log('[VANTAGE] Auth check — session:', getSession());
+
     // If logged in and on home page, redirect to dashboard
     if (isLoggedIn() && (window.location.pathname === '/' || window.location.pathname === '/index.html')) {
         window.location.href = '/dashboard';
     }
 
-    // If not logged in and on dashboard, redirect home
+    // If not logged in and on dashboard, graceful redirect
     if (!isLoggedIn() && window.location.pathname === '/dashboard') {
-        window.location.href = '/';
+        console.log('[VANTAGE] Not logged in on dashboard, redirecting...');
+        const app = document.getElementById('app');
+        if (app) {
+            app.style.transition = 'opacity 0.6s ease, filter 0.6s ease';
+            app.style.opacity = '0.3';
+            app.style.filter = 'blur(6px)';
+        }
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1500);
     }
 });

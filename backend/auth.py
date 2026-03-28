@@ -3,80 +3,93 @@ VANTAGE — Authentication
 Register, login, and session endpoints.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from flask import Blueprint, request, jsonify
 from passlib.context import CryptContext
 
-from .database import get_db
-from .models import User, UserRegister, UserLogin, UserOut
+from .database import SessionLocal
+from .models import User
 
-router = APIRouter(prefix="/api/auth", tags=["auth"])
+auth_bp = Blueprint("auth", __name__, url_prefix="/api")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-@router.post("/register", response_model=UserOut)
-def register(data: UserRegister, db: Session = Depends(get_db)):
+@auth_bp.route("/register", methods=["POST"])
+def register():
     """Create a new user account."""
-    # Check for existing user_id
-    if db.query(User).filter(User.user_id == data.user_id).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User ID already taken.",
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+        
+    db = SessionLocal()
+    try:
+        if db.query(User).filter(User.user_id == data.get("user_id")).first():
+            return jsonify({"error": "User ID already taken."}), 400
+        
+        if db.query(User).filter(User.email == data.get("email")).first():
+            return jsonify({"error": "Email already registered."}), 400
+
+        new_user = User(
+            full_name=data.get("full_name"),
+            user_id=data.get("user_id"),
+            email=data.get("email"),
+            hashed_password=pwd_context.hash(data.get("password")),
         )
-    # Check for existing email
-    if db.query(User).filter(User.email == data.email).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered.",
-        )
-
-    new_user = User(
-        full_name=data.full_name,
-        user_id=data.user_id,
-        email=data.email,
-        hashed_password=pwd_context.hash(data.password),
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return jsonify({"success": True}), 201
+    finally:
+        db.close()
 
 
-@router.post("/login")
-def login(data: UserLogin, db: Session = Depends(get_db)):
+@auth_bp.route("/login", methods=["POST"])
+def login():
     """Authenticate user and return session info."""
-    user = db.query(User).filter(User.user_id == data.user_id).first()
-    if not user or not pwd_context.verify(data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials.",
-        )
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+        
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.user_id == data.get("user_id")).first()
+        if not user or not pwd_context.verify(data.get("password"), user.hashed_password):
+            return jsonify({"error": "Invalid credentials."}), 401
 
-    # Check if admin
-    is_admin = data.user_id == "mz8834"
+        is_admin = data.get("user_id") == "mz8834"
 
-    return {
-        "message": "Login successful",
-        "user": {
+        return jsonify({
+            "success": True,
+            "user_id": user.user_id,
+            "user": {
+                "id": user.id,
+                "full_name": user.full_name,
+                "user_id": user.user_id,
+                "email": user.email,
+                "is_admin": is_admin,
+            },
+        }), 200
+    finally:
+        db.close()
+
+
+@auth_bp.route("/me", methods=["GET"])
+def get_current_user():
+    """Get current user data by user_id (session check)."""
+    user_id = request.args.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Missing user_id"}), 400
+        
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.user_id == user_id).first()
+        if not user:
+            return jsonify({"error": "User not found."}), 404
+        return jsonify({
             "id": user.id,
             "full_name": user.full_name,
             "user_id": user.user_id,
             "email": user.email,
-            "is_admin": is_admin,
-        },
-    }
-
-
-@router.get("/me")
-def get_current_user(user_id: str, db: Session = Depends(get_db)):
-    """Get current user data by user_id (session check)."""
-    user = db.query(User).filter(User.user_id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-    return {
-        "id": user.id,
-        "full_name": user.full_name,
-        "user_id": user.user_id,
-        "email": user.email,
-        "is_admin": user.user_id == "mz8834",
-    }
+            "is_admin": user.user_id == "mz8834",
+        }), 200
+    finally:
+        db.close()

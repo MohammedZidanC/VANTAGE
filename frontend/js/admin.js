@@ -3,7 +3,7 @@
    User management for the hardcoded admin (mz8834).
    ═══════════════════════════════════════════════════════════════════ */
 
-const ADMIN_API = `${window.location.origin}/api/admin`;
+const ADMIN_API = 'http://127.0.0.1:8000/api/admin';
 
 function initAdminPanel() {
     if (!isAdmin()) return;

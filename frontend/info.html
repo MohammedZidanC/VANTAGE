@@ -33,62 +33,72 @@
                 <div class="info-hero">
                     <h1>VANTAGE</h1>
                     <p class="tagline">Focus. Track. Dominate.</p>
-                </div>
-
-                <!-- Section 1: fade center -->
-                <section class="info-section glass-card" style="padding: 28px;">
-                    <h2>🎯 Precision Task Management</h2>
-                    <p>
-                        VANTAGE is not just another to-do application — it is a purpose-built command center designed for individuals who take their productivity seriously. Every element of the interface has been crafted to reduce friction and maximize focus. The task management system allows you to create, organize, and complete tasks with fluid animations that provide satisfying visual feedback. When you check off a task, a golden ripple effect cascades outward, followed by a smooth strike-through animation and a gentle fade, giving you a sense of tangible accomplishment with every completed item. Tasks are stored securely in a SQLite database through a FastAPI backend, ensuring that your data persists reliably across sessions. The refresh mechanism reloads your data without disrupting your session, keeping you in the zone.
-                    </p>
-                </section>
-
-                <!-- Section 2: slide right -->
+                </di                <!-- Section 1: fade in from right -->
                 <section class="info-section slide-right glass-card" style="padding: 28px;">
-                    <h2>🗺️ Dynamic Map Interface</h2>
+                    <h2>1. Smart Task Management</h2>
                     <p>
-                        The entire application is built on top of a living, breathing map layer powered by Leaflet with CartoDB Dark Matter tiles. The map is centered on Tokyo, one of the most densely networked cities in the world, creating an immersive backdrop that shifts and responds to your actions within the application. When you navigate to the home page, the map displays a wide, zoomed-out view of the Tokyo metropolitan area. As you move to the login screen, the map subtly shifts its position, creating a sense of spatial navigation. The dashboard view zooms in deeper, revealing intricate road networks and urban geometry. Each page transition triggers a smooth pan and zoom effect, making the background feel alive and contextual rather than static and decorative. A dark overlay composed of the application's deep navy and black tones ensures text remains perfectly legible while preserving the atmospheric depth of the map beneath.
+                        VANTAGE redefines how you interact with your daily objectives. Instead of a cluttered, overwhelming list, our Smart Task Management system provides a highly focused, distraction-free environment where your priorities take center stage. Adding a task is instantaneous, seamlessly storing your data in a secure SQLite database via a robust FastAPI-inspired Flask backend. When a task is marked as complete, a satisfying golden ripple emanates from the checkbox, visually cementing your accomplishment before the task gently fades away from your active list. This isn't just a to-do app; it’s an interactive command center designed to keep you locked into a state of deep work and continuous momentum.
                     </p>
                 </section>
 
-                <!-- Section 3: slide left -->
+                <!-- Section 2: fade in from left -->
                 <section class="info-section slide-left glass-card" style="padding: 28px;">
-                    <h2>🚗 Ambient Car Light System</h2>
+                    <h2>2. Secure Login System</h2>
                     <p>
-                        One of VANTAGE's most distinctive visual features is the car light animation system that runs as a canvas overlay above the map layer. Simulated vehicle lights traverse predefined paths across the viewport, entering exclusively from the edges of the screen — never spawning abruptly in the middle of view. Each light point moves at a non-uniform speed, creating a natural and organic traffic-like flow. The lights alternate between bright gold and muted bronze hues, perfectly matching the application's design palette. The density is carefully calibrated to provide ambient motion without becoming distracting. This subtle animation layer adds a sense of life and movement to the interface, reinforcing the feeling that you are operating within a living urban command center rather than a static web page.
+                        Security shouldn't compromise speed or aesthetics. VANTAGE's Secure Login System utilizes state-of-the-art bcrypt hashing through the Passlib library, ensuring that your credentials are computationally scrambled long before they ever reach our secure database. Your data remains strictly compartmentalized and protected. The login flow itself is elegantly decoupled from disruptive page reloads—submitting your credentials triggers a smooth, transparent authentication check, granting you immediate access while safely preserving your session in the browser. It is enterprise-grade security wrapped in a consumer-grade, beautifully responsive glassmorphic interface that never gets in your way.
                     </p>
                 </section>
 
-                <!-- Section 4: slide right -->
+                <!-- Section 3: fade in from right -->
                 <section class="info-section slide-right glass-card" style="padding: 28px;">
-                    <h2>🎨 Glassmorphic Design Language</h2>
+                    <h2>3. Admin Control Panel</h2>
                     <p>
-                        Every visual element in VANTAGE follows a strict glassmorphic design language. The interface uses a carefully curated four-color palette: dark navy blue for primary backgrounds, deep black-blue for depth layers, bright gold for accents and interactive highlights, and muted bronze for borders and subtle structural elements. UI components feature transparent blur backgrounds with acrylic-like effects, creating a layered depth that makes the interface feel three-dimensional. Borders use the bronze tone to provide structure without harshness, while hover states trigger a warm golden glow that draws attention naturally. The font system uses system-native typefaces for optimal rendering performance, while display elements and map labels employ Montserrat-style letterforms with generous tracking for a premium, editorial look. The overall effect is an interface that feels expensive, polished, and distinctly modern.
+                        Power and oversight are baked directly into the platform without cluttering the experience for standard users. The Admin Control Panel is an exclusive, hidden-by-default interface that only reveals itself to authenticated administrators. Once accessed, it provides a comprehensive bird's-eye view of the entire VANTAGE ecosystem. Administrators can effortlessly audit registered users, monitor platform joining dates, inspect granular task histories for specific accounts, and enforce platform rules with one-click data deletion tools. It delivers absolute architectural control through a clean, visually unified interface that maintains the app's signature dark luxury aesthetic.
                     </p>
                 </section>
 
-                <!-- Section 5: slide left -->
+                <!-- Section 4: fade in from left -->
                 <section class="info-section slide-left glass-card" style="padding: 28px;">
-                    <h2>🔐 Secure Authentication</h2>
+                    <h2>4. Real-Time Task Tracking</h2>
                     <p>
-                        Security is built into the foundation of VANTAGE. The authentication system runs on a FastAPI backend with SQLite persistence, using the Passlib library with bcrypt hashing to securely store passwords. When you register, your password is never stored in plain text — it undergoes computationally intensive hashing that makes it effectively irreversible. The login process validates your credentials server-side and provides session persistence through local storage, meaning you stay logged in even after refreshing the page or closing and reopening your browser. After a successful login or registration, a sleek golden loading spinner appears for two seconds, providing a polished transition into the dashboard. The registration form captures your full name, a unique user ID, email address, and password, building a complete user profile that the admin system can reference.
+                        Understanding your progress requires immediate visual feedback. VANTAGE's Real-Time Task Tracking ensures that the moment you interact with your data, the interface responds instinctively without requiring manual refreshes or disruptive loading screens. Through optimized AJAX fetch calls and intelligent DOM manipulation, tasks populate, update, and disappear with fluid transitional states. Every interaction communicates with the backend asynchronously, ensuring that your dashboard always reflects your absolute latest state. This zero-latency visual confirmation keeps you operating at peak efficiency, preventing the cognitive break that normally occurs when battling sluggish web applications.
                     </p>
                 </section>
 
-                <!-- Section 6: slide right -->
+                <!-- Section 5: fade in from right -->
                 <section class="info-section slide-right glass-card" style="padding: 28px;">
-                    <h2>👑 Admin Control Panel</h2>
+                    <h2>5. Seamless User Experience</h2>
                     <p>
-                        VANTAGE includes a powerful administrative interface that is completely invisible to regular users. The admin panel is accessible only to the designated administrator account and provides comprehensive oversight of the entire user base. From within the admin panel, the administrator can view a complete list of all registered users, including their names, IDs, email addresses, and registration dates, presented in a clean table format. Individual user records can be expanded to view their complete task history, and accounts can be deleted with a single action. The admin link appears in the top dock navigation exclusively for the admin user, maintaining a clean and uncluttered interface for everyone else. This separation of concerns ensures that ordinary users experience a focused, distraction-free environment while giving the administrator full control over the platform.
+                        Every micro-interaction within VANTAGE has been heavily scrutinized to eliminate friction and build immersion. Standard multi-page applications suffer from disjointed experiences where the screen aggressively flashes between navigations. VANTAGE solves this by employing a sophisticated Javascript transition state controller. When you click a navigation link, the current content gracefully scales and fades out, allowing the background map to continuously animate as the application pre-fetches your destination. The new content then glides smoothly into the viewport. This creates a deeply cinematic flow, blurring the line between a traditional website and a native desktop application.
                     </p>
                 </section>
 
-                <!-- Section 7: slide left -->
+                <!-- Section 6: fade in from left -->
                 <section class="info-section slide-left glass-card" style="padding: 28px;">
-                    <h2>🎬 Cinematic Animations</h2>
+                    <h2>6. Map-Based Visual Experience</h2>
                     <p>
-                        VANTAGE treats animation as a first-class design element rather than an afterthought. The application opens with a cinematic logo reveal: the abstract checkmark logo draws itself in gold before sliding to the left, after which the "VANTAGE |" text appears from the right. The entire group then scales down and moves upward as the main interface fades in beneath it — reminiscent of premium mobile application launches. Throughout the interface, every transition is crafted with iPhone-like smoothness using carefully tuned cubic-bezier timing functions. The map background responds to user actions: logging in triggers a zoom and blur effect, navigating to the dashboard initiates a pan, adding a task causes a subtle shift, and refreshing triggers horizontal movement. Scroll animations on the Info page alternate between center fades and directional slides, creating a reading experience that feels dynamic and engaging.
+                        The defining visual characteristic of VANTAGE is its interactive, living background environment. Built on top of Leaflet and utilizing high-contrast CartoDB Dark Matter tiles, the map anchors the application in a digital recreation of the Tokyo metropolitan area. As you navigate between login, dashboard, and informational panels, the camera autonomously pans and zooms to frame specific geographical coordinates, physically grounding your digital tasks in a sprawling urban topography. Enhanced by an atmospheric, deep-space gradient overlay, this isn't just a design choice—it's an interactive spatial canvas that makes the application feel tangibly infinite.
                     </p>
+                </section>
+
+                <!-- Section 7: fade in from right -->
+                <section class="info-section slide-right glass-card" style="padding: 28px;">
+                    <h2>7. Performance & Responsiveness</h2>
+                    <p>
+                        Heavy visual fidelity rarely pairs well with high-speed performance, but VANTAGE breaks that rule. The application aggressively preloads and cushions map tiles 12-layers deep before you ever see them, guaranteeing that rapid navigations never result in black grids or broken images. Hardware-accelerated CSS properties ensure that the dynamic car light animations—which spawn organic, glowing fireflies that drift unpredictably across the viewport—run continuously without causing frame drops or UI stuttering. Whether you are managing complex tasks on a widescreen desktop monitor or quickly organizing your day on a mobile device, the platform remains blazingly fast and perfectly fluid.
+                    </p>
+                </section>
+
+                <!-- Section 8: fade in from left -->
+                <section class="info-section slide-left glass-card" style="padding: 28px;">
+                    <h2>8. Minimalist + Premium Design</h2>
+                    <p>
+                        VANTAGE proves that simplicity and luxury can coexist perfectly. The entire platform adheres to an uncompromising, four-color design system: Deep Navy backgrounds, Pitch Black structural depths, Sharp Gold accents, and Muted Bronze borders. By leveraging precise glassmorphic blurring, transparent panels separate foreground tasks from the intricate map layer beneath without fully obscuring it. Unnecessary borders and heavy drop shadows have been abandoned in favor of ethereal glows and high-contrast typography. The result is a highly disciplined, visually striking minimalist interface that feels less like a basic website and more like entering the cockpit of a premium, high-end vehicle.
+                    </p>
+                </section>
+
+                <!-- Trigger scroll animations when this fragment is AJAX-injected -->
+                <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" onload="if(typeof initScrollAnimations === 'function') initScrollAnimations();" style="display:none;" alt="loader" />    </p>
                 </section>
 
             </div>

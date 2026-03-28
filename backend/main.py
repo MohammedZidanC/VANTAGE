@@ -1,82 +1,105 @@
 """
-VANTAGE — FastAPI Entry Point
-Serves frontend static files and mounts API routers.
+VANTAGE — Flask Entry Point
+Serves frontend static files and mounts API blueprints.
 """
 
 import os
-from fastapi import FastAPI, Depends, HTTPException, Query
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from typing import List
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 
-from .database import init_db, get_db
-from .models import Task, TaskCreate, TaskOut, TaskUpdate
-from .auth import router as auth_router
-from .admin import router as admin_router
+from .database import init_db, SessionLocal
+from .models import Task
+from .auth import auth_bp
+from .admin import admin_bp
 
-app = FastAPI(title="VANTAGE", version="1.0.0")
+app = Flask(__name__)
 
 # CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+CORS(app)
 
-# Include routers
-app.include_router(auth_router)
-app.include_router(admin_router)
-
+# Register Blueprints
+app.register_blueprint(auth_bp)
+app.register_blueprint(admin_bp)
 
 # ─── Task Endpoints ──────────────────────────────────────────────────
 
-@app.get("/api/tasks", response_model=List[TaskOut])
-def get_tasks(user_id: str = Query(...), db: Session = Depends(get_db)):
+@app.route("/api/tasks", methods=["GET"])
+def get_tasks():
     """Get all tasks for a user."""
-    return db.query(Task).filter(Task.owner_id == user_id).order_by(Task.created_at.desc()).all()
+    user_id = request.args.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Missing user_id parameter"}), 400
+        
+    db = SessionLocal()
+    try:
+        tasks = db.query(Task).filter(Task.owner_id == user_id).order_by(Task.created_at.desc()).all()
+        return jsonify([task.to_dict() for task in tasks]), 200
+    finally:
+        db.close()
 
 
-@app.post("/api/tasks", response_model=TaskOut)
-def create_task(task: TaskCreate, user_id: str = Query(...), db: Session = Depends(get_db)):
+@app.route("/api/tasks", methods=["POST"])
+def create_task():
     """Create a new task."""
-    new_task = Task(title=task.title, owner_id=user_id)
-    db.add(new_task)
-    db.commit()
-    db.refresh(new_task)
-    return new_task
+    user_id = request.args.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Missing user_id parameter"}), 400
+        
+    data = request.get_json()
+    if not data or not data.get("title"):
+        return jsonify({"error": "Invalid JSON or missing title"}), 400
+        
+    db = SessionLocal()
+    try:
+        new_task = Task(title=data.get("title"), owner_id=user_id)
+        db.add(new_task)
+        db.commit()
+        db.refresh(new_task)
+        return jsonify(new_task.to_dict()), 201
+    finally:
+        db.close()
 
 
-@app.patch("/api/tasks/{task_id}", response_model=TaskOut)
-def update_task(task_id: int, update: TaskUpdate, db: Session = Depends(get_db)):
+@app.route("/api/tasks/<int:task_id>", methods=["PATCH"])
+def update_task(task_id):
     """Toggle task completion."""
-    task = db.query(Task).filter(Task.id == task_id).first()
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found.")
-    task.completed = update.completed
-    db.commit()
-    db.refresh(task)
-    return task
+    data = request.get_json()
+    if not data or "completed" not in data:
+        return jsonify({"error": "Invalid JSON or missing completed status"}), 400
+        
+    db = SessionLocal()
+    try:
+        task = db.query(Task).filter(Task.id == task_id).first()
+        if not task:
+            return jsonify({"error": "Task not found."}), 404
+            
+        task.completed = data.get("completed")
+        db.commit()
+        db.refresh(task)
+        return jsonify(task.to_dict()), 200
+    finally:
+        db.close()
 
 
-@app.delete("/api/tasks/{task_id}")
-def delete_task(task_id: int, db: Session = Depends(get_db)):
+@app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
     """Delete a task."""
-    task = db.query(Task).filter(Task.id == task_id).first()
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found.")
-    db.delete(task)
-    db.commit()
-    return {"message": "Task deleted."}
+    db = SessionLocal()
+    try:
+        task = db.query(Task).filter(Task.id == task_id).first()
+        if not task:
+            return jsonify({"error": "Task not found."}), 404
+            
+        db.delete(task)
+        db.commit()
+        return jsonify({"message": "Task deleted."}), 200
+    finally:
+        db.close()
 
 
 # ─── Startup ─────────────────────────────────────────────────────────
 
-@app.on_event("startup")
-def on_startup():
+with app.app_context():
     init_db()
 
 
@@ -84,27 +107,37 @@ def on_startup():
 
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
 
-# Mount static subdirectories
-app.mount("/css", StaticFiles(directory=os.path.join(FRONTEND_DIR, "css")), name="css")
-app.mount("/js", StaticFiles(directory=os.path.join(FRONTEND_DIR, "js")), name="js")
-app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="assets")
+@app.route("/")
+def root():
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
-
-@app.get("/")
-def serve_index():
-    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
-
-
-@app.get("/dashboard")
+@app.route("/dashboard")
 def serve_dashboard():
-    return FileResponse(os.path.join(FRONTEND_DIR, "dashboard.html"))
+    return send_from_directory(FRONTEND_DIR, "dashboard.html")
 
-
-@app.get("/info")
+@app.route("/info")
 def serve_info():
-    return FileResponse(os.path.join(FRONTEND_DIR, "info.html"))
+    return send_from_directory(FRONTEND_DIR, "info.html")
 
-
-@app.get("/about")
+@app.route("/about")
 def serve_about():
-    return FileResponse(os.path.join(FRONTEND_DIR, "about.html"))
+    return send_from_directory(FRONTEND_DIR, "about.html")
+
+@app.route("/css/<path:filename>")
+def serve_css(filename):
+    return send_from_directory(os.path.join(FRONTEND_DIR, "css"), filename)
+
+@app.route("/js/<path:filename>")
+def serve_js(filename):
+    return send_from_directory(os.path.join(FRONTEND_DIR, "js"), filename)
+
+@app.route("/assets/<path:filename>")
+def serve_assets(filename):
+    return send_from_directory(os.path.join(FRONTEND_DIR, "assets"), filename)
+
+@app.route("/<path:filename>")
+def serve_root_files(filename):
+    return send_from_directory(FRONTEND_DIR, filename)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)

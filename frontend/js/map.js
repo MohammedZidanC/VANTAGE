@@ -6,12 +6,12 @@
 
 // ── Page-Based Map Positions ─────────────────────────────────────────
 const MAP_POSITIONS = {
-    home:      { center: [35.6762, 139.6503], zoom: 11 },
-    login:     { center: [35.6812, 139.7671], zoom: 12 },
-    register:  { center: [35.6595, 139.7004], zoom: 12 },
-    dashboard: { center: [35.6892, 139.6920], zoom: 14 },
-    info:      { center: [35.7100, 139.8107], zoom: 12 },
-    about:     { center: [35.6284, 139.7365], zoom: 13 },
+    home: { center: [35.6762, 139.6503], zoom: 13 },
+    login: { center: [35.6812, 139.7671], zoom: 14 },
+    register: { center: [35.6595, 139.7004], zoom: 14 },
+    dashboard: { center: [35.6892, 139.6920], zoom: 15 },
+    info: { center: [35.7100, 139.8107], zoom: 14 },
+    about: { center: [35.6284, 139.7365], zoom: 14 },
 };
 
 let vantageMap = null;
@@ -32,18 +32,47 @@ function initMap(page = 'home') {
         doubleClickZoom: false,
         touchZoom: false,
         keyboard: false,
+        fadeAnimation: true,
+        zoomAnimation: true,
+        zoomAnimationThreshold: 6,
     });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         subdomains: 'abcd',
         maxZoom: 19,
+        keepBuffer: 10,
+        updateWhenZooming: true,
+        updateWhenIdle: false,
+        className: 'vantage-tiles',
     }).addTo(vantageMap);
 }
 
 function transitionMap(page) {
     if (!vantageMap) return;
     const pos = MAP_POSITIONS[page] || MAP_POSITIONS.home;
-    vantageMap.flyTo(pos.center, pos.zoom, { duration: 1.8 });
+
+    // Preload center and surrounding tiles for target location BEFORE moving
+    vantageMap.eachLayer(layer => {
+        if (layer instanceof L.TileLayer) {
+            const point = vantageMap.project(pos.center, pos.zoom).divideBy(256).floor();
+            for (let i = -2; i <= 2; i++) {
+                for (let j = -2; j <= 2; j++) {
+                    const coords = new L.Point(point.x + i, point.y + j);
+                    coords.z = pos.zoom;
+                    const url = layer.getTileUrl(coords);
+                    if (url) {
+                        const img = new Image();
+                        img.src = url;
+                    }
+                }
+            }
+        }
+    });
+
+    // Short delay before camera movement to allow tiles to start loading
+    setTimeout(() => {
+        vantageMap.flyTo(pos.center, pos.zoom, { duration: 2.2, easeLinearity: 0.15 });
+    }, 150);
 }
 
 function nudgeMap(dx = 0.002, dy = 0) {
@@ -55,7 +84,7 @@ function nudgeMap(dx = 0.002, dy = 0) {
 
 // ── Firefly Animation ────────────────────────────────────────────────
 const FIREFLY_COLORS = ['#E6B95F', '#8F7138', '#E6B95F', '#c9a24e'];
-const MAX_FIREFLIES = 10;
+const MAX_FIREFLIES = 18;
 let fireflies = [];
 let fireflyCanvas, fireflyCtx;
 let animFrameId;
@@ -120,7 +149,7 @@ function animateFireflies() {
     fireflyCtx.clearRect(0, 0, fireflyCanvas.width, fireflyCanvas.height);
 
     // Spawn new fireflies
-    if (fireflies.length < MAX_FIREFLIES && Math.random() < 0.12) {
+    if (fireflies.length < MAX_FIREFLIES && Math.random() < 0.2) {
         fireflies.push(spawnLight());
     }
 

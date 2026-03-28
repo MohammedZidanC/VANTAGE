@@ -59,26 +59,103 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    let isTransitioning = false;
+
     // ── Smooth dock navigation (transition map before navigating) ─────
     document.querySelectorAll('.dock a[data-page]').forEach(link => {
         if (link.id === 'admin-dock-link') return; // handled above
 
-        link.addEventListener('click', (e) => {
+        link.addEventListener('click', async (e) => {
             e.preventDefault();
             const page = link.dataset.page;
             const href = link.getAttribute('href');
 
-            // Don't reload if already on the page
-            if (link.classList.contains('active')) return;
+            // Don't reload if already on the page or transitioning
+            if (link.classList.contains('active') || isTransitioning) return;
+            isTransitioning = true;
 
-            // Transition map first, then navigate
+            // Update dock UI visually
+            document.querySelectorAll('.dock a[data-page]').forEach(a => a.classList.remove('active'));
+            link.classList.add('active');
+
+            // Transition map first
             if (typeof transitionMap === 'function') {
                 transitionMap(page);
             }
 
-            setTimeout(() => {
+            // Fade out current content and scale down
+            const content = document.querySelector('.page-content');
+            if (content) {
+                content.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
+                content.style.opacity = '0';
+                content.style.transform = 'scale(0.98)';
+            }
+
+            // Add subtle overlay
+            let overlay = document.getElementById('transition-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'transition-overlay';
+                overlay.style.position = 'fixed';
+                overlay.style.inset = '0';
+                overlay.style.backgroundColor = 'rgba(5, 8, 18, 0.4)';
+                overlay.style.zIndex = '50';
+                overlay.style.opacity = '0';
+                overlay.style.pointerEvents = 'none';
+                overlay.style.transition = 'opacity 0.3s ease';
+                document.body.appendChild(overlay);
+            }
+            void overlay.offsetWidth; // force reflow
+            overlay.style.opacity = '1';
+
+            try {
+                // Fetch new page content in background
+                const resp = await fetch(href);
+                const html = await resp.text();
+
+                // Wait ~250ms AFTER map movement starts (150ms map delay + 250ms = 400ms)
+                setTimeout(() => {
+                    const parser = new DOMParser();
+                    const newDoc = parser.parseFromString(html, 'text/html');
+                    const newContent = newDoc.querySelector('.page-content');
+
+                    if (newContent && content) {
+                        // DOM switch
+                        content.innerHTML = newContent.innerHTML;
+                        
+                        // Set initial entry state
+                        content.style.transition = 'none';
+                        content.style.opacity = '0';
+                        content.style.transform = 'translateY(10px)';
+
+                        // Delay slightly to let browser register new layout before animating in
+                        requestAnimationFrame(() => {
+                            // Fade in new content smoothly
+                            content.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+                            content.style.opacity = '1';
+                            content.style.transform = 'translateY(0)';
+                            
+                            overlay.style.opacity = '0';
+                            
+                            window.history.pushState({}, '', href);
+
+                            // Re-initialize specific scripts if needed
+                            if (page === 'dashboard' && typeof initDashboard === 'function') {
+                                initDashboard();
+                                if (typeof initAdminPanel === 'function') initAdminPanel();
+                            }
+                            
+                            setTimeout(() => { isTransitioning = false; }, 300);
+                        });
+                    } else {
+                        window.location.href = href;
+                    }
+                }, 400);
+
+            } catch (err) {
+                console.error("Transition failed:", err);
                 window.location.href = href;
-            }, 300);
+            }
         });
     });
 

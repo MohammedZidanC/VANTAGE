@@ -3,7 +3,7 @@
    CRUD operations for dashboard tasks with animations.
    ═══════════════════════════════════════════════════════════════════ */
 
-const TASKS_API = `${window.location.origin}/api/tasks`;
+const TASKS_API = 'http://127.0.0.1:8000/api/tasks';
 
 // ── Load Tasks ───────────────────────────────────────────────────────
 async function loadTasks() {

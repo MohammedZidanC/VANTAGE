@@ -1,10 +1,9 @@
 """
 VANTAGE — Data Models
-SQLAlchemy ORM models and Pydantic schemas.
+SQLAlchemy ORM models.
 """
 
 import datetime
-from pydantic import BaseModel, EmailStr
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -25,6 +24,15 @@ class User(Base):
 
     tasks = relationship("Task", back_populates="owner", cascade="all, delete-orphan")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "full_name": self.full_name,
+            "user_id": self.user_id,
+            "email": self.email,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None
+        }
+
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -37,45 +45,10 @@ class Task(Base):
 
     owner = relationship("User", back_populates="tasks")
 
-
-# ─── Pydantic Schemas ────────────────────────────────────────────────
-
-class UserRegister(BaseModel):
-    full_name: str
-    user_id: str
-    email: str
-    password: str
-
-
-class UserLogin(BaseModel):
-    user_id: str
-    password: str
-
-
-class UserOut(BaseModel):
-    id: int
-    full_name: str
-    user_id: str
-    email: str
-    created_at: datetime.datetime
-
-    class Config:
-        from_attributes = True
-
-
-class TaskCreate(BaseModel):
-    title: str
-
-
-class TaskOut(BaseModel):
-    id: int
-    title: str
-    completed: bool
-    created_at: datetime.datetime
-
-    class Config:
-        from_attributes = True
-
-
-class TaskUpdate(BaseModel):
-    completed: bool
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "completed": self.completed,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None
+        }

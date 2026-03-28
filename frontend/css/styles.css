@@ -168,7 +168,7 @@ a:hover { color: #f5d68a; }
     padding: 90px 24px 40px;
     opacity: 0;
     animation: fadeInPage 0.8s var(--transition) forwards;
-    animation-delay: 0.15s;
+    animation-delay: 0.25s;
 }
 
 /* ── Auth Forms ──────────────────────────────────────────────────── */
@@ -893,4 +893,22 @@ a:hover { color: #f5d68a; }
         width: 86px;
         height: 86px;
     }
+}
+
+/* ── Smooth Tile Transitions ─────────────────────────────────────── */
+.vantage-tiles {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.leaflet-tile {
+    transition: opacity 0.3s ease-in-out !important;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+    will-change: transform;
+}
+
+.leaflet-fade-anim .leaflet-tile {
+    will-change: opacity;
 }
