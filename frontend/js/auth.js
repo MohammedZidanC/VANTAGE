@@ -74,7 +74,7 @@ function initAuthForms() {
             try {
                 // Determine destination
                 const isAdminUser = userId === "mz8834";
-                const dest = isAdminUser ? '/dashboard#admin' : '/dashboard';
+                const dest = isAdminUser ? '/dashboard.html#admin' : '/dashboard.html';
 
                 // Map zoom effect triggers as soon as attempt starts
                 if (typeof transitionMap === 'function') transitionMap('dashboard');
@@ -96,8 +96,8 @@ function initAuthForms() {
                     })
                 });
                 
-                showLoading(2000);
-                const resp = await fetchPromise;
+                const loadPromise = showLoading(2000);
+                const [resp] = await Promise.all([fetchPromise, loadPromise]);
 
                 if (!resp.ok) {
                     const text = await resp.text();
@@ -170,7 +170,7 @@ function initAuthForms() {
                     setSession(loginData);
                 }
 
-                window.location.href = '/dashboard';
+                window.location.href = '/dashboard.html';
             } catch (err) {
                 errorEl.textContent = err.message;
                 errorEl.style.display = 'block';

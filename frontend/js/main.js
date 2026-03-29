@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Admin access only");
                 return;
             }
-            if (window.location.pathname === '/dashboard') {
+            if (window.location.pathname === '/dashboard.html') {
                 const panel = document.getElementById('admin-panel');
                 if (panel) {
                     panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } else {
-                window.location.href = '/dashboard#admin';
+                window.location.href = '/dashboard.html#admin';
             }
         });
     }

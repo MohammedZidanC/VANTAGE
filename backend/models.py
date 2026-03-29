@@ -25,13 +25,12 @@ class User(Base):
     tasks = relationship("Task", back_populates="owner", cascade="all, delete-orphan")
 
     def to_dict(self):
-    return {
-        "id": self.id,
-        "title": self.title,
-        "completed": self.completed,
-        "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
-        "owner_id": self.owner_id
-    }
+        return {
+            "id": self.id,
+            "full_name": self.full_name,
+            "user_id": self.user_id,
+            "email": self.email,
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
         }
 
 
@@ -51,5 +50,6 @@ class Task(Base):
             "id": self.id,
             "title": self.title,
             "completed": self.completed,
-            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None
+            "created_at": self.created_at.isoformat() + "Z" if self.created_at else None,
+            "owner_id": self.owner_id
         }
