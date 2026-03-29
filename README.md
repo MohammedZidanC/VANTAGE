@@ -119,13 +119,15 @@ http://127.0.0.1:8000
 User ID: mz8834
 Password: 1974
 ```
+---
+##📌 Notes
 
-#📌 Notes
 Frontend and backend are deployed separately
 Backend must be running for full functionality
 All API routes are prefixed with /api
+---
+##🚀 Future Improvements
 
-#🚀 Future Improvements
 Better task filtering & sorting
 UI/UX enhancements
 Performance optimizations
