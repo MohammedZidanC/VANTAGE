@@ -66,7 +66,7 @@ function initAuthForms() {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const errorEl = document.getElementById('login-error');
-            errorEl.style.display = 'none';
+            if (errorEl) errorEl.style.display = 'none';
 
             const userId = document.getElementById('login-userid').value.trim();
             const password = document.getElementById('login-password').value;
@@ -74,7 +74,7 @@ function initAuthForms() {
             try {
                 // Determine destination
                 const isAdminUser = userId === "mz8834";
-                const dest = isAdminUser ? '/dashboard.html#admin' : '/dashboard.html';
+                const dest = isAdminUser ? '/dashboard#admin' : '/dashboard';
 
                 // Map zoom effect triggers as soon as attempt starts
                 if (typeof transitionMap === 'function') transitionMap('dashboard');
@@ -96,8 +96,8 @@ function initAuthForms() {
                     })
                 });
                 
-                const loadPromise = showLoading(2000);
-                const [resp] = await Promise.all([fetchPromise, loadPromise]);
+                showLoading(2000);
+                const resp = await fetchPromise;
 
                 if (!resp.ok) {
                     const text = await resp.text();
@@ -168,9 +168,9 @@ function initAuthForms() {
                     localStorage.setItem("is_admin", loginData.is_admin);
 
                     setSession(loginData);
-}                }
+                }
 
-                window.location.href = '/dashboard.html';
+                window.location.href = '/dashboard';
             } catch (err) {
                 errorEl.textContent = err.message;
                 errorEl.style.display = 'block';
