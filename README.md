@@ -134,11 +134,13 @@ UI/UX enhancements
 Performance optimizations
 Improved session handling
 
-#👤 Author
+---
+##👤 Author
+---
+
 Mohammed Zidan C
 GitHub: https://github.com/MohammedZidanC
 
 
 If you like this project
 Give it a star ⭐ on GitHub!
----
