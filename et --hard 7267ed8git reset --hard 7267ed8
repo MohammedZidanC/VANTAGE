@@ -1,0 +1,20 @@
+[33m5ef80fd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m fixes
+[33maf4aa19[m fixes
+[33m7267ed8[m fixes
+[33m09e0a7d[m fixes
+[33mf0418b9[m fixes
+[33m051d3eb[m fixes
+[33m36de1ce[m fix admin + tasks + loading + transitions
+[33m1b2d22a[m fix admin + tasks + loading + transitions
+[33mb0be59a[m fix admin + tasks + loading + transitions
+[33mb9b895d[m fix admin + tasks + loading + transitions
+[33m97df27a[m fix admin + tasks + loading + transitions
+[33m22a09a5[m fix admin + tasks + loading + transitions
+[33m65f3d89[m fix admin + tasks + loading + transitions
+[33m0c5e0b7[m fix routing + tasks + register + admin
+[33mfb3ff7f[m fix vercel routing final
+[33m0de3d57[m fix api + navigation guard
+[33m028ac53[m Updated frontend API URLs to production backend
+[33mbeebd20[m Final version - VANTAGE with smooth UX, animations, and full functionality
+[33m9f23eca[m Clean repository and add .gitignore
+[33md0ffa5a[m Initial commit - VANTAGE
