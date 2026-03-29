@@ -3,7 +3,7 @@
    Login and register fetch calls, session management.
    ═══════════════════════════════════════════════════════════════════ */
 
-const API_BASE = 'https://mohammedzidanc.pythonanywhere.com/api';
+window.API_BASE = window.API_BASE || 'https://mohammedzidanc.pythonanywhere.com/api';
 
 // ── Session Helpers ──────────────────────────────────────────────────
 function getSession() {
@@ -163,8 +163,12 @@ function initAuthForms() {
 
                 if (loginResp.ok) {
                     const loginData = await loginResp.json();
-                    setSession(loginData.user);
-                }
+
+                    localStorage.setItem("user_id", loginData.user_id);
+                    localStorage.setItem("is_admin", loginData.is_admin);
+
+                    setSession(loginData);
+}                }
 
                 window.location.href = '/dashboard.html';
             } catch (err) {

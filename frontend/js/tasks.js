@@ -3,7 +3,7 @@
    CRUD operations for dashboard tasks with animations.
    ═══════════════════════════════════════════════════════════════════ */
 
-const API_BASE = 'https://mohammedzidanc.pythonanywhere.com/api';
+window.API_BASE = window.API_BASE || 'https://mohammedzidanc.pythonanywhere.com/api';
 
 // ── Load Tasks ───────────────────────────────────────────────────────
 async function loadTasks() {
@@ -123,11 +123,10 @@ async function handleTaskComplete(li, taskId) {
 }
 
 // ── Add Task ─────────────────────────────────────────────────────────
-console.log("USER ID:", userId);
 async function addTask(title) {
     const userId = localStorage.getItem('user_id');
     if (!userId) {
-    alert("User not logged in");
+        alert("User not logged in");
     return;
 }
 

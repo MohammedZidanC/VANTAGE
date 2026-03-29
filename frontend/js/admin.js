@@ -3,7 +3,7 @@
    User management for the hardcoded admin (mz8834).
    ═══════════════════════════════════════════════════════════════════ */
 
-const API_BASE = 'https://mohammedzidanc.pythonanywhere.com/api';
+window.API_BASE = window.API_BASE || 'https://mohammedzidanc.pythonanywhere.com/api';
 
 function initAdminPanel() {
     if (!isAdmin()) return;
@@ -31,7 +31,7 @@ async function loadUsers() {
     if (!tbody) return;
 
     try {
-        const resp = await fetch(`${API_BASE}/admin/users`, { headers: { 'Content-Type': 'application/json' } });
+        const resp = await fetch(`${API_BASE}/admin/users?admin_id=${adminId}`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) {
             const text = await resp.text();
             console.error("API ERROR:", resp.status, text);
@@ -80,13 +80,16 @@ async function viewUserTasks(userId) {
     modal.classList.add('visible');
 
     try {
-        const resp = await fetch(`${API_BASE}/admin/tasks`, { headers: { 'Content-Type': 'application/json' } });
+        const resp = await fetch(`${API_BASE}/admin/tasks?admin_id=${adminId}`, { headers: { 'Content-Type': 'application/json' } });
         if (!resp.ok) {
             const text = await resp.text();
             console.error("API ERROR:", resp.status, text);
             throw new Error("Request failed");
         }
+        
         let tasks = await resp.json();
+
+        tasks = tasks.filter(t => t.owner_id === userId);
 
         if (tasks.length === 0) {
             listEl.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">No tasks found.</p>';
@@ -111,7 +114,7 @@ async function deleteUser(userId) {
 
     const adminId = getCurrentUserId();
     try {
-        const resp = await fetch(`${API_BASE}/admin/users/${userId}`, {
+        const resp = await fetch(`${API_BASE}/admin/users/${userId}?admin_id=${adminId}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         });
