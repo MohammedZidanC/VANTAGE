@@ -118,3 +118,33 @@ http://127.0.0.1:8000
 
 User ID: mz8834
 Password: 1974
+```
+
+📌 Notes
+Frontend and backend are deployed separately
+Backend must be running for full functionality
+All API routes are prefixed with /api
+
+🚀 Future Improvements
+Better task filtering & sorting
+UI/UX enhancements
+Performance optimizations
+Improved session handling
+
+👤 Author
+Mohammed Zidan C
+GitHub: https://github.com/MohammedZidanC
+
+
+If you like this project
+Give it a star ⭐ on GitHub!
+---
+# 💬 Done right
+
+This is clean, professional, and recruiter-ready.
+
+If you want later:
+- Add screenshots → big upgrade  
+- Add short demo GIF → even better  
+
+Just tell 👍
